@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  hesk:
+    build: .
+    container_name: hesk
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+      - hesk_attachments:/var/www/html/attachments
+      - hesk_cache:/var/www/html/cache
+    depends_on:
+      - db
+    environment:
+      - HESK_DB_HOST=db
+      - HESK_DB_NAME=hesk
+      - HESK_DB_USER=hesk_user
+      - HESK_DB_PASSWORD=hesk_password
+
+  db:
+    image: mysql:5.7
+    container_name: hesk_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=hesk
+      - MYSQL_USER=hesk_user
+      - MYSQL_PASSWORD=hesk_password
+    volumes:
+      - hesk_db_data:/var/lib/mysql
+
+volumes:
+  hesk_db_data:
+  hesk_attachments:
+  hesk_cache:
