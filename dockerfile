@@ -30,11 +30,12 @@ RUN chown -R www-data:www-data /var/www/html/attachments \
 RUN chmod -R 777 /var/www/html/attachments 
 RUN chmod -R 777 /var/www/html/cache 
 RUN chmod 666 /var/www/html/hesk_settings.inc.php
+WORKDIR /var/www/html/
 
 # Configurar permissões para arquivos e pastas específicos
-RUN chmod 666 /var/www/html/hesk_settings.inc.php \
-    && chmod -R 777 /var/www/html/attachments \
-    && chmod -R 777 /var/www/html/cache
+ 
+RUN chmod -R 777 /var/www/html/attachments 
+RUN chmod -R 777 /var/www/html/cache
 
 # Configurar o Apache para servir o HESK corretamente
 RUN echo "<Directory /var/www/html/>" > /etc/apache2/conf-available/hesk.conf && \
@@ -43,6 +44,7 @@ RUN echo "<Directory /var/www/html/>" > /etc/apache2/conf-available/hesk.conf &&
     echo "    Require all granted" >> /etc/apache2/conf-available/hesk.conf && \
     echo "</Directory>" >> /etc/apache2/conf-available/hesk.conf
 
+RUN chmod 666 /var/www/html/hesk_settings.inc.php
 # Habilitar a configuração do HESK no Apache
 RUN a2enconf hesk
 
