@@ -20,6 +20,13 @@ services:
   hesk:
     image: joaoprdo/hesk-helpdesk
     container_name: hesk_app
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/index.php || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     ports:
       - "8080:80"
     depends_on:
@@ -36,6 +43,13 @@ services:
   db:
     image: mysql:5.7
     container_name: hesk_db
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
       - MYSQL_DATABASE=hesk
@@ -48,6 +62,7 @@ volumes:
   hesk_db_data:
   hesk_attachments:
   hesk_cache:
+
 ```
 
 ## 🔗 Links Úteis
@@ -62,7 +77,7 @@ Após subir os containers com `docker-compose up -d`, acesse o instalador em htt
 
 
 ```bash
-docker container exec -it <nome-container ou ID>  bash
+docker container exec -it hesk_app  bash
 rm -r  install/
 ``` 
 Com  tudo pronto acesse: http://localhost:8080/index.php
